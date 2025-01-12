@@ -32,12 +32,13 @@ namespace EcomWebAPI.Controllers
 
             if(user == null)
             {
-                return NotFound("User not found!");
+                return NotFound(new { success = false, message = "User not found!" });
+
             }
 
             if (!BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
             {
-                return Unauthorized("Incorrect password!");
+                return Unauthorized(new {success=false, message = "Incorrect password!"});
             }
 
             var token = _tokenService.GenerateToken(user);
@@ -53,6 +54,7 @@ namespace EcomWebAPI.Controllers
                 Cart = user.Cart
             };
             return Ok(response);
+
         }
 
 
@@ -63,11 +65,11 @@ namespace EcomWebAPI.Controllers
 
             if (request == null)
             {
-                return BadRequest();
+                return BadRequest(new {success=false, message="Invalid request!"});
             }
             if(existingUser != null)
             {
-                return Conflict("User already exists!");
+                return Conflict(new {success = false, message = "User already exists!"});
             }
             request.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
 

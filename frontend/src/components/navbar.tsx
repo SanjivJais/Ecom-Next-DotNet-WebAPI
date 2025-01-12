@@ -94,7 +94,9 @@ export default function Navbar() {
                     <DropdownMenuContent className="w-44">
                         <DropdownMenuLabel>My Account</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>Profile</DropdownMenuItem>
+                        <DropdownMenuItem>
+                            <Link href={'/profile'}>Profile</Link>
+                        </DropdownMenuItem>
                         <DropdownMenuItem>Billing</DropdownMenuItem>
                         <DropdownMenuSub>
                             <DropdownMenuSubTrigger>Theme</DropdownMenuSubTrigger>
@@ -113,12 +115,14 @@ export default function Navbar() {
                     </DropdownMenuContent>
                 </DropdownMenu>
 
-                <Button
-                    variant="default"
-                    size="default"
-                >
-                    Start Shopping
-                </Button>
+                <Link href="/login" prefetch={false}>
+                    <Button
+                        variant="default"
+                        size="default"
+                    >
+                        Login
+                    </Button>
+                </Link>
 
 
             </nav>

@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "vXrcHmeaEQIpG+Y0thzzV/wKiT8RGEJGEpaP1187AIo=",
+  "Source": "EcomWebAPI",
+  "BasePath": "_content/EcomWebAPI",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

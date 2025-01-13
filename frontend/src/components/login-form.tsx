@@ -12,11 +12,11 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { useState } from "react"
-import useUserStore from "@/stores/user-store"
+import useAuthStore from "@/stores/authStore"
 import { useRouter } from "next/navigation"
 import { loginUser } from "@/services/authService"
 import toast from "react-hot-toast"
-import Cookies from "js-cookie"
+import { saveToken } from "@/utils/token"
 
 
 export function LoginForm({
@@ -29,7 +29,7 @@ export function LoginForm({
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [loading, setLoading] = useState(false)
-    const setUser = useUserStore((state) => state.setUser)
+    const { user, setUser, setToken } = useAuthStore();
 
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -37,12 +37,11 @@ export function LoginForm({
         setLoading(true)
         try {
             const response = await loginUser(email, password)
-            setUser(response)
-            // Set the token as an HttpOnly cookie
-            Cookies.set("auth-token", response.token, {
-                expires: 1, // 1 day
-                secure: process.env.NODE_ENV === "production",
-            });
+            setUser(response.data)
+            if (response.data) {
+                saveToken(response.data.token)
+                setToken(response.data.token)
+            }
             toast.success("Login successful")
             router.push("/")
         } catch (error) {
@@ -56,7 +55,6 @@ export function LoginForm({
             setLoading(false)
         }
     }
-
 
 
     return (

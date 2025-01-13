@@ -1,4 +1,5 @@
-﻿using EcomWebAPI.DTOs;
+﻿using System.Security.Claims;
+using EcomWebAPI.DTOs;
 using EcomWebAPI.Models;
 using EcomWebAPI.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -15,11 +16,13 @@ namespace EcomWebAPI.Controllers
 
         private readonly AppDbContext _context;
         private readonly TokenService _tokenService;
+        private readonly ILogger<UsersController> _logger;
 
-        public UsersController (AppDbContext context, TokenService tokenService)
+        public UsersController (AppDbContext context, TokenService tokenService, ILogger<UsersController> logger)
         {
             _context = context;
             _tokenService = tokenService;
+            _logger = logger;
         }
 
 
@@ -53,7 +56,7 @@ namespace EcomWebAPI.Controllers
                 CreatedAt = user.CreatedAt,
                 Cart = user.Cart
             };
-            return Ok(response);
+            return Ok(new {success = true, data = response});
 
         }
 
@@ -82,9 +85,48 @@ namespace EcomWebAPI.Controllers
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
-            return Ok("User registered successfully!");
+            return Ok(new {success = true, message = "User registered successfully!"});
         }
 
+
+        [HttpGet("me")]
+        [Authorize]
+        public async Task<IActionResult> GetUserData()
+        {
+            // Get the user's ID from the token
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            _logger.LogInformation("Extracted userIdClaim: {UserIdClaim}", userId);
+
+
+            if (!Guid.TryParse(userId, out var parsedUserId))
+            {
+                return Unauthorized(new { success = false, message = "Invalid user ID!" });
+            }
+
+            //if (userId == null)
+            //{
+            //    return Unauthorized(new {success = false, message = "Unauthorized user!"});
+            //}
+
+            // Fetch user details from the database using the userId
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == parsedUserId);
+            if (user == null)
+            {
+                return NotFound(new {success = false, message = "User not found!"});
+            }
+
+            var response = new AuthResponse
+            {
+                UserId = user.UserId,
+                Email = user.Email,
+                Name = user.Name,
+                Role = user.Role,
+                CreatedAt = user.CreatedAt,
+                Cart = user.Cart
+            };
+            return Ok(new { success = true, data = response });
+        }
 
         // API to get all users
         [HttpGet]

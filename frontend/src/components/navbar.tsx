@@ -17,11 +17,13 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { ShoppingCart } from "lucide-react"
 import { useTheme } from "next-themes"
+import useAuthStore from "@/stores/authStore"
 
 
 export default function Navbar() {
 
     const { setTheme } = useTheme();
+    const { logout } = useAuthStore()
 
     return (
         <header className="sticky top-0 flex h-20 w-full shrink-0 items-center px-4 md:px-6">
@@ -111,7 +113,7 @@ export default function Navbar() {
                         </DropdownMenuSub>
                         <DropdownMenuSeparator />
 
-                        <DropdownMenuItem>Logout</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => logout()} >Logout</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
 

@@ -3,10 +3,14 @@ export interface User {
     email: string;
     name: string;
     role: string;
-    token: string;
     createdAt: string;
     cart: Cart // Adjust based on your actual `cart` structure.
 }
+
+export interface AuthResponseUser extends User {
+    token: string;
+}
+
 
 export interface Product {
     productId: string;

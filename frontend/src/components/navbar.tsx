@@ -18,12 +18,23 @@ import {
 import { ShoppingCart } from "lucide-react"
 import { useTheme } from "next-themes"
 import useAuthStore from "@/stores/authStore"
-
+import { useRouter } from "next/navigation"
+import { removeToken } from "@/utils/token"
 
 export default function Navbar() {
 
     const { setTheme } = useTheme();
-    const { logout } = useAuthStore()
+    const { user, clearUser } = useAuthStore()
+
+    const router = useRouter()
+    const logOutUser = () => {
+        clearUser()
+        removeToken();
+        // reload page
+        
+
+        router.push('/login')
+    }
 
     return (
         <header className="sticky top-0 flex h-20 w-full shrink-0 items-center px-4 md:px-6">
@@ -86,7 +97,7 @@ export default function Navbar() {
 
 
 
-                <DropdownMenu>
+                {user && <DropdownMenu>
                     <DropdownMenuTrigger>
                         <Avatar className="h-9 w-9">
                             <AvatarImage src="https://github.com/shadcn.png" />
@@ -113,18 +124,18 @@ export default function Navbar() {
                         </DropdownMenuSub>
                         <DropdownMenuSeparator />
 
-                        <DropdownMenuItem onClick={() => logout()} >Logout</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => logOutUser()} >Logout</DropdownMenuItem>
                     </DropdownMenuContent>
-                </DropdownMenu>
+                </DropdownMenu>}
 
-                <Link href="/login" prefetch={false}>
+                {!user && <Link href="/login" prefetch={false}>
                     <Button
                         variant="default"
                         size="default"
                     >
                         Login
                     </Button>
-                </Link>
+                </Link>}
 
 
             </nav>

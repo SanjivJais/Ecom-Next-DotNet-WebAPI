@@ -14,14 +14,15 @@ export const loginUser = async (email: string, password: string): Promise<AuthRe
     return response.data;
 };
 
-export const fetchUserData = async (): Promise<AuthResponse["data"]> => {
+export const fetchUserData = async (): Promise<AuthResponse> => {
     const token = getToken();
     if (!token) throw new Error("No token found");
 
-    const response = await axios.get<AuthResponse["data"]>(`${API_BASE_URL}/users/me`, {
+    const response = await axios.get<AuthResponse>(`${API_BASE_URL}/users/me`, {
         headers: {
             Authorization: `Bearer ${token}`,
         },
     });
     return response.data;
 };
+

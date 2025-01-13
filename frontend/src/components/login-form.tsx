@@ -42,7 +42,6 @@ export function LoginForm({
                 saveToken(response.data.token)
                 setToken(response.data.token)
             }
-            toast.success("Login successful")
             router.push("/")
         } catch (error) {
             // Display the error message from the thrown error

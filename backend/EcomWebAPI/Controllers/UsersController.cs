@@ -81,6 +81,7 @@ namespace EcomWebAPI.Controllers
                 Email = request.Email,
                 Name = request.Name,
                 Password = request.Password,
+                Role = request.Role,
             };
 
             _context.Users.Add(user);

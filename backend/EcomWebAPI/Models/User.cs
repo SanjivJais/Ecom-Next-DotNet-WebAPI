@@ -22,8 +22,8 @@ namespace EcomWebAPI.Models
         public string Password { get; set; }
 
         [Required]
-        [MaxLength (255)]
-        public string Role { get; set; }
+        [MaxLength(255)]
+        public string Role { get; set; } = "Customer";
         public bool IsDeleted { get; set; } = false;
         public bool IsVerified { get; set; } = false;
 

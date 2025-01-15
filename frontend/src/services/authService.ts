@@ -1,4 +1,3 @@
-// services/authService.ts
 import { API_BASE_URL } from "@/config";
 import { AuthResponseUser } from "@/utils/interfaces";
 import { getToken } from "@/utils/token";
@@ -23,6 +22,12 @@ export const fetchUserData = async (): Promise<AuthResponse> => {
             Authorization: `Bearer ${token}`,
         },
     });
+    return response.data;
+};
+
+
+export const registerUser = async (name: string, email: string, password: string, role: string) => {
+    const response = await axios.post(`${API_BASE_URL}/users/register`, { name, email, password, role });
     return response.data;
 };
 

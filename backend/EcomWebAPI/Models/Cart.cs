@@ -10,7 +10,6 @@ namespace EcomWebAPI.Models
         [Required]
         [ForeignKey("User")]
         public Guid UserId { get; set; }
-        [Required]
         public User User { get; set; }
     }
 }

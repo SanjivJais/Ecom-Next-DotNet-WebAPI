@@ -1,3 +1,5 @@
+import { type LucideIcon } from "lucide-react";
+
 export interface User {
     userId: string;
     email: string;
@@ -10,7 +12,6 @@ export interface User {
 export interface AuthResponseUser extends User {
     token: string;
 }
-
 
 export interface Product {
     productId: string;
@@ -40,5 +41,26 @@ export interface Category {
     name: string;
     description: string;
     createdAt: string;
+}
+
+export interface CustomError {
+    response: {
+        data: {
+            message: string;
+        }
+    }
+}
+
+export interface SidebarMenuInterface {
+    items: {
+        title: string
+        url: string
+        icon ?: LucideIcon
+        isActive ?: boolean
+        items ?: {
+            title: string
+            url: string
+        }[]
+    } []
 }
 

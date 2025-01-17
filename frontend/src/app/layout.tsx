@@ -3,6 +3,7 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/context/ThemeProvider";
 import AuthProvider from "@/context/AuthProvider";
+import { Toaster } from "sonner";
 
 const poppins = Poppins({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -33,7 +34,16 @@ export default function RootLayout({
           enableSystem={true}
           disableTransitionOnChange
         >
-          <AuthProvider>{children}</AuthProvider>
+          <Toaster
+            richColors
+            position="top-right"
+            duration={2000}
+          />
+
+          <AuthProvider>
+
+            {children}
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

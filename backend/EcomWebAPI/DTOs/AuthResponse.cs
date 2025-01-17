@@ -10,6 +10,8 @@ namespace EcomWebAPI.DTOs
         public string Role { get; set; }
         public string Token { get; set; }
         public DateTime CreatedAt { get; set; }
+        public bool IsDeleted { get; set; }
+        public bool IsVerified { get; set; }
         public Cart Cart { get; set; }
     }
 }

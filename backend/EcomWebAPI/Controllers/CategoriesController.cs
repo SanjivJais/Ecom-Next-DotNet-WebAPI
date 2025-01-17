@@ -23,7 +23,7 @@ namespace EcomWebAPI.Controllers
         public async Task<IActionResult> GetCategories()
         {
             var categories = await _context.Categories.ToListAsync();
-            return Ok(categories);
+            return Ok(new {success = true, data = categories});
         }
 
         // API to get a single category
@@ -36,68 +36,69 @@ namespace EcomWebAPI.Controllers
             {
                 return NotFound();
             }
-            return Ok(category);
+            return Ok(new {success = true, data = category});
         }
 
 
-        // Following APIs are for Vendor only
+        // Following APIs are for Admin only
 
 
         // API to add a new category
         [HttpPost]
-        [Authorize(Roles = "Vendor")]
-        public async Task<IActionResult> AddCategory(Category category)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AddCategory(string name, string description)
         {
-            if (category == null)
+            var newCategory = new Category { Name = name, Description = description };
+            if (newCategory == null)
             {
-                return BadRequest();
+                return BadRequest(new {success = false, message="Invalid input"});
             }
-            if(category.Name == "Uncategorized")
+            if(newCategory.Name == "Uncategorized")
             {
-                return BadRequest(new { Message = "Cannot add Uncategorized category!" });
+                return BadRequest(new { success=false, message = "Cannot add \"Uncategorized\" category!" });
             }
-            await _context.Categories.AddAsync(category);
+            await _context.Categories.AddAsync(newCategory);
             await _context.SaveChangesAsync();
-            return Ok(category);
+            return Ok(new {success = true, data = newCategory});
         }
 
         // API to update a category
         [HttpPut("{id}")]
-        [Authorize(Roles = "Vendor")]
-        public async Task<IActionResult> UpdateCategory(Guid id, Category category)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateCategory(Guid id, string name, string description)
         {
-            if (category == null || id != category.CategoryId)
+            var updatedCategory = new Category { CategoryId=id, Name=name, Description = description };
+            if (updatedCategory == null)
             {
-                return BadRequest();
+                return BadRequest(new {success = false, message="Invalid input"});
             }
-            var existingCategory = await _context.Categories.FirstOrDefaultAsync(c => c.CategoryId == id);
+            var existingCategory = await _context.Categories.FirstOrDefaultAsync(c => c.CategoryId == updatedCategory.CategoryId);
             if (existingCategory == null)
             {
-                return NotFound();
+                return NotFound(new {success = false, message = "Category not found!"});
             }
 
             if(existingCategory.Name == "Uncategorized")
             {
-                return BadRequest(new { Message = "Cannot update Uncategorized category!" });
+                return BadRequest(new { success = false, message = "Cannot update \"Uncategorized\" category!" });
             }
-            existingCategory.Name = category.Name;
-            existingCategory.Description = category.Description;
+            existingCategory.Name = updatedCategory.Name;
+            existingCategory.Description = updatedCategory.Description;
             await _context.SaveChangesAsync();
-            return Ok(existingCategory);
+            return Ok(new {success = true, data = existingCategory});
         }
 
         // API to delete a category
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Vendor")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteCategory(Guid id)
         {
             var category = await _context.Categories.FirstOrDefaultAsync(c => c.CategoryId == id);
             if (category == null)
             {
-                return NotFound();
+                return NotFound(new {success = false, message = "Category not found!"});
             }
             category.IsDeleted = true;
-
 
             // Also mark all products under this category as Uncategorized
             var uncategorized = await _context.Categories.FirstOrDefaultAsync(c => c.Name == "Uncategorized");
@@ -114,7 +115,7 @@ namespace EcomWebAPI.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return Ok(new {Message="Category deleted successfully!", Id=id});
+            return Ok(new {success = true, message="Category deleted successfully!"});
         }
 
 

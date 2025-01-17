@@ -49,11 +49,13 @@ namespace EcomWebAPI.Controllers
             var response = new AuthResponse
             {
                 UserId = user.UserId,
-                Token = token,
                 Email = user.Email,
                 Name = user.Name,
                 Role = user.Role,
+                Token = token,
                 CreatedAt = user.CreatedAt,
+                IsDeleted = user.IsDeleted,
+                IsVerified = user.IsVerified,
                 Cart = user.Cart
             };
             return Ok(new {success = true, data = response});
@@ -97,18 +99,13 @@ namespace EcomWebAPI.Controllers
             // Get the user's ID from the token
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            _logger.LogInformation("Extracted userIdClaim: {UserIdClaim}", userId);
+            //_logger.LogInformation("Extracted userIdClaim: {UserIdClaim}", userId);
 
 
             if (!Guid.TryParse(userId, out var parsedUserId))
             {
-                return Unauthorized(new { success = false, message = "Invalid user ID!" });
+                return Unauthorized(new { success = false, message = "Unauthorized user!" });
             }
-
-            //if (userId == null)
-            //{
-            //    return Unauthorized(new {success = false, message = "Unauthorized user!"});
-            //}
 
             // Fetch user details from the database using the userId
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == parsedUserId);
@@ -124,6 +121,8 @@ namespace EcomWebAPI.Controllers
                 Name = user.Name,
                 Role = user.Role,
                 CreatedAt = user.CreatedAt,
+                IsDeleted = user.IsDeleted, 
+                IsVerified = user.IsVerified,
                 Cart = user.Cart
             };
             return Ok(new { success = true, data = response });

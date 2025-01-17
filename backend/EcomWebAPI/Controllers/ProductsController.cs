@@ -1,4 +1,5 @@
-﻿using EcomWebAPI.Models;
+﻿using EcomWebAPI.DTOs;
+using EcomWebAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -11,34 +12,32 @@ namespace EcomWebAPI.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-
         private readonly AppDbContext _context;
-
         public ProductsController(AppDbContext context)
         {
             _context = context;
         }
 
-
         // API to get all products
         [HttpGet]
-
+        [AllowAnonymous]
         public async Task<IActionResult> GetProducts()
         {
             var products = await _context.Products.ToListAsync();
-            return Ok(products);
+            return Ok(new {success = true, data = products});
         }
 
         // API to get a single product
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetProduct(Guid id)
         {
             var product = await _context.Products.FirstOrDefaultAsync(p => p.ProductId == id);
             if (product == null)
             {
-                return NotFound();
+                return NotFound(new {success = false, message= "Product not found!"});
             }
-            return Ok(product);
+            return Ok(new {success = true, data = product});
         }
 
 
@@ -47,40 +46,50 @@ namespace EcomWebAPI.Controllers
         // API to add a new product
         [HttpPost]
         [Authorize(Roles= "Vendor")]
-        public async Task<IActionResult> AddProduct(Product product)
+        public async Task<IActionResult> AddProduct(ProductRequest request)
         {
-            if (product == null)
+            if (request == null)
             {
-                return BadRequest();
+                return BadRequest(new {success = false, message = "Invalid input!"});
             }
+            var product = new Product
+            {
+                CategoryId = request.CategoryId,
+                Name = request.Name,
+                Price = request.Price,
+                Description = request.Description,
+                Stock = request.Stock,
+                ImageUrl = request.ImageUrl,
+            };
             await _context.Products.AddAsync(product);
             await _context.SaveChangesAsync();
-            return Ok(product);
+            return Ok(new {success = true, data=product});
         }
 
 
         // API to update a product
         [HttpPut("{id}")]
         [Authorize(Roles = "Vendor")]
-        public async Task<IActionResult> UpdateProduct(Guid id, Product product)
+        public async Task<IActionResult> UpdateProduct(Guid id, ProductRequest request)
         {
-            if(product == null || id != product.ProductId)
+            var updatedProduct = new Product { ProductId = id };
+            if(updatedProduct == null || id != updatedProduct.ProductId)
             {
-                return BadRequest();
+                return BadRequest(new {success = false, message = "Invalid input!"});
             }
             var existingProduct = await _context.Products.FirstOrDefaultAsync(p => p.ProductId == id);
             if (existingProduct == null)
             {
-                return NotFound();
+                return NotFound(new {success = false, message = "Product not found!"});
             }
-            existingProduct.Name = product.Name;
-            existingProduct.Description = product.Description;
-            existingProduct.Price = product.Price;
-            existingProduct.Stock = product.Stock;
-            existingProduct.ImageUrl = product.ImageUrl;
-            existingProduct.CategoryId = product.CategoryId;
+            existingProduct.Name = request.Name;
+            existingProduct.Description = request.Description;
+            existingProduct.Price = request.Price;
+            existingProduct.Stock = request.Stock;
+            existingProduct.ImageUrl = request.ImageUrl;
+            existingProduct.CategoryId = request.CategoryId;
             await _context.SaveChangesAsync();
-            return Ok(existingProduct);
+            return Ok(new {success = true, data = existingProduct});
         }
 
 
@@ -92,11 +101,17 @@ namespace EcomWebAPI.Controllers
             var product = await _context.Products.FirstOrDefaultAsync(p => p.ProductId == id);
             if (product == null)
             {
-                return NotFound("Product not found!");
+                return NotFound(new {success = false, message = "Product not found!" });
             }
             product.IsDeleted = true;
+
+            var cartItems = await _context.CartItems.Where(i=>i.ProductId == id).ToListAsync();
+            foreach (var item in cartItems)
+            {
+                item.IsDeleted = true;
+            }
             await _context.SaveChangesAsync();
-            return Ok(product);
+            return Ok(new {success = true, data = product});
         }
 
 

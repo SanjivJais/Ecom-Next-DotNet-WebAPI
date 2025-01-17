@@ -14,8 +14,9 @@ import Link from "next/link"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { registerUser } from "@/services/authService"
-import toast from "react-hot-toast"
 import { Checkbox } from "./ui/checkbox"
+import { CustomError } from "@/utils/interfaces"
+import { toast } from "sonner"
 
 export function SignupForm({
     className,
@@ -51,26 +52,25 @@ export function SignupForm({
 
     const [loading, setLoading] = useState(false)
 
-
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        
-        setLoading(true)
-        try {
+        e.preventDefault();
+        setLoading(true);
+
+        const signupPromise = async () => {
             await registerUser(formDetails.name, formDetails.email, formDetails.password, formDetails.role)
-            toast.success("Account created successfully");
-            router.push("/login")
-        } catch (error) {
-            // Display the error message from the thrown error
-            if (error instanceof Error) {
-                toast.error(error.message);
-            } else {
-                toast.error("An unknown error occurred");
+            router.push("/login");
+        };
+
+        toast.promise(signupPromise, {
+            loading: "Signing up...",
+            success: `Account created successfully!`,
+            error: (error: CustomError) => {
+                return `${error?.response?.data?.message}`
             }
-        } finally {
-            setLoading(false)
-        }
-    }
+        });
+
+        setLoading(false);
+    };
 
 
     return (
@@ -118,7 +118,7 @@ export function SignupForm({
                                     type="password"
                                     name="password"
                                     value={formDetails.password}
-                                    placeholder="********"
+                                    placeholder="*******"
                                     onChange={(e) => handleChange(e)}
                                     required
                                 />

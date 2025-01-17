@@ -24,17 +24,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CartItem"
+                "$ref": "#/components/schemas/CartItemRequest"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/CartItem"
+                "$ref": "#/components/schemas/CartItemRequest"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/CartItem"
+                "$ref": "#/components/schemas/CartItemRequest"
               }
             }
           }
@@ -134,25 +134,22 @@
         "tags": [
           "Categories"
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Category"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Category"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/Category"
-              }
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "schema": {
+              "type": "string"
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -195,27 +192,22 @@
               "type": "string",
               "format": "uuid"
             }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Category"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Category"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/Category"
-              }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "schema": {
+              "type": "string"
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -263,17 +255,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Product"
+                "$ref": "#/components/schemas/ProductRequest"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/Product"
+                "$ref": "#/components/schemas/ProductRequest"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/Product"
+                "$ref": "#/components/schemas/ProductRequest"
               }
             }
           }
@@ -326,17 +318,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Product"
+                "$ref": "#/components/schemas/ProductRequest"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/Product"
+                "$ref": "#/components/schemas/ProductRequest"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/Product"
+                "$ref": "#/components/schemas/ProductRequest"
               }
             }
           }
@@ -431,6 +423,18 @@
         }
       }
     },
+    "/api/Users/me": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Users": {
       "get": {
         "tags": [
@@ -460,43 +464,9 @@
         },
         "additionalProperties": false
       },
-      "Cart": {
-        "required": [
-          "user",
-          "userId"
-        ],
+      "CartItemRequest": {
         "type": "object",
         "properties": {
-          "cartId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "userId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "user": {
-            "$ref": "#/components/schemas/User"
-          }
-        },
-        "additionalProperties": false
-      },
-      "CartItem": {
-        "required": [
-          "cartId",
-          "productId",
-          "quantity"
-        ],
-        "type": "object",
-        "properties": {
-          "cartItemId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "cartId": {
-            "type": "string",
-            "format": "uuid"
-          },
           "productId": {
             "type": "string",
             "format": "uuid"
@@ -504,24 +474,11 @@
           "quantity": {
             "type": "integer",
             "format": "int32"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "cart": {
-            "$ref": "#/components/schemas/Cart"
-          },
-          "product": {
-            "$ref": "#/components/schemas/Product"
           }
         },
         "additionalProperties": false
       },
-      "Category": {
-        "required": [
-          "name"
-        ],
+      "ProductRequest": {
         "type": "object",
         "properties": {
           "categoryId": {
@@ -529,47 +486,8 @@
             "format": "uuid"
           },
           "name": {
-            "maxLength": 255,
-            "minLength": 1,
-            "type": "string"
-          },
-          "description": {
             "type": "string",
             "nullable": true
-          },
-          "isDeleted": {
-            "type": "boolean"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        },
-        "additionalProperties": false
-      },
-      "Product": {
-        "required": [
-          "categoryId",
-          "createdAt",
-          "imageUrl",
-          "name",
-          "price",
-          "stock"
-        ],
-        "type": "object",
-        "properties": {
-          "productId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "categoryId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "name": {
-            "maxLength": 255,
-            "minLength": 1,
-            "type": "string"
           },
           "description": {
             "type": "string",
@@ -584,18 +502,8 @@
             "format": "int32"
           },
           "imageUrl": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "isDeleted": {
-            "type": "boolean"
-          },
-          "createdAt": {
             "type": "string",
-            "format": "date-time"
-          },
-          "category": {
-            "$ref": "#/components/schemas/Category"
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -618,56 +526,6 @@
           "role": {
             "type": "string",
             "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "User": {
-        "required": [
-          "createdAt",
-          "email",
-          "name",
-          "password",
-          "role"
-        ],
-        "type": "object",
-        "properties": {
-          "userId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "name": {
-            "maxLength": 255,
-            "minLength": 1,
-            "type": "string"
-          },
-          "email": {
-            "maxLength": 255,
-            "minLength": 1,
-            "type": "string",
-            "format": "email"
-          },
-          "password": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "role": {
-            "maxLength": 255,
-            "minLength": 1,
-            "type": "string"
-          },
-          "isDeleted": {
-            "type": "boolean"
-          },
-          "isVerified": {
-            "type": "boolean"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "cart": {
-            "$ref": "#/components/schemas/Cart"
           }
         },
         "additionalProperties": false

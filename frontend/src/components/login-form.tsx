@@ -15,8 +15,8 @@ import { useState } from "react"
 import useAuthStore from "@/stores/authStore"
 import { useRouter } from "next/navigation"
 import { loginUser } from "@/services/authService"
-import toast from "react-hot-toast"
 import { saveToken } from "@/utils/token"
+import { toast } from "sonner"
 
 
 export function LoginForm({
@@ -29,31 +29,36 @@ export function LoginForm({
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [loading, setLoading] = useState(false)
-    const { user, setUser, setToken } = useAuthStore();
+    const { setUser, setToken } = useAuthStore();
 
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        setLoading(true)
-        try {
-            const response = await loginUser(email, password)
-            setUser(response.data)
+        e.preventDefault();
+        setLoading(true);
+
+        const loginPromise = async () => {
+            const response = await loginUser(email, password);
+            setUser(response.data);
+
             if (response.data) {
-                saveToken(response.data.token)
-                setToken(response.data.token)
+                saveToken(response.data.token);
+                setToken(response.data.token);
             }
-            router.push("/")
-        } catch (error) {
-            // Display the error message from the thrown error
-            if (error instanceof Error) {
-                toast.error(error.message);
-            } else {
-                toast.error("An unknown error occurred");
+
+            router.push("/");
+            return response.data; // Pass this data to the success callback in toast.promise
+        };
+
+        toast.promise(loginPromise, {
+            loading: "Logging in...",
+            success: (data) => { return `Welcome back, ${data.name.split(" ")[0]}!` },
+            error: (error) => {
+                return `${error.response.data.message}`
             }
-        } finally {
-            setLoading(false)
-        }
-    }
+        });
+
+        setLoading(false);
+    };
 
 
     return (
@@ -95,8 +100,9 @@ export function LoginForm({
                             <Button
                                 type="submit"
                                 className="w-full"
+                                disabled={loading}
                             >
-                                {loading ? "Logging in..." : "Login"}
+                                Login
                             </Button>
                         </div>
                         <div className="mt-4 text-center text-sm">

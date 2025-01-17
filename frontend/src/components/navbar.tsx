@@ -18,7 +18,6 @@ import {
 import { ShoppingCart } from "lucide-react"
 import { useTheme } from "next-themes"
 import useAuthStore from "@/stores/authStore"
-// import { useRouter } from "next/navigation"
 import { removeToken } from "@/utils/token"
 
 export default function Navbar() {
@@ -113,9 +112,7 @@ export default function Navbar() {
                     <DropdownMenuContent className="w-44">
                         <DropdownMenuLabel>My Account</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>
-                            <Link href={'/profile'}>Profile</Link>
-                        </DropdownMenuItem>
+                        <Link href={'/profile'}><DropdownMenuItem>Profile</DropdownMenuItem></Link>
                         <DropdownMenuItem>Billing</DropdownMenuItem>
                         <DropdownMenuSub>
                             <DropdownMenuSubTrigger>Theme</DropdownMenuSubTrigger>
@@ -128,8 +125,8 @@ export default function Navbar() {
                                 </DropdownMenuSubContent>
                             </DropdownMenuPortal>
                         </DropdownMenuSub>
+                        {user?.role.toLowerCase() === 'admin' && <><DropdownMenuSeparator /> <Link href={'/admin'}><DropdownMenuItem>Admin Panel</DropdownMenuItem></Link></>}
                         <DropdownMenuSeparator />
-
                         <DropdownMenuItem onClick={() => logOutUser()} >Logout</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>}

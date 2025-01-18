@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 // Define protected and public routes
-const protectedRoutes = ['/profile']; // Routes accessible only when logged in
+const protectedRoutes = ['/profile', '/admin']; // Routes accessible only when logged in
 const publicRoutes = ['/login', '/signup']; // Routes accessible only when logged out
 
 export function middleware(request: NextRequest) {
@@ -31,5 +31,10 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ['/profile/:path*', '/login', '/signup'], // Match paths to apply the middleware
+    matcher: [
+        '/profile/:path*',
+        '/login/:path*',
+        '/signup/:path*',
+        '/admin/:path*'
+    ], // Match paths to apply the middleware
 };

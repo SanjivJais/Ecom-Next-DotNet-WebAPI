@@ -32,8 +32,12 @@ function AdminLayout({
                 isActive: false,
                 items: [
                     {
+                        title: "Manage products",
+                        url: "/admin/product",
+                    },
+                    {
                         title: "Categories",
-                        url: "#",
+                        url: "/admin/product/category",
                     },
                 ],
             },

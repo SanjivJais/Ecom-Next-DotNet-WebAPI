@@ -20,3 +20,13 @@ export const createCategory = async (name: string, description: string): Promise
     const response = await apiClient.post<CategoryResponse>("/categories", { name, description });
     return response.data;
 }
+
+export const updateCategory = async (id: string, name: string, description: string): Promise<CategoryResponse> => {
+    const response = await apiClient.put<CategoryResponse>(`/categories/${id}`, { name, description });
+    return response.data;
+}
+
+export const deleteCategory = async (id: string): Promise<CategoryResponse> => {
+    const response = await apiClient.delete<CategoryResponse>(`/categories/${id}`);
+    return response.data;
+}

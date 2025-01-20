@@ -55,7 +55,11 @@ namespace EcomWebAPI.Controllers
             }
             if (categoryRequest.Name == "Uncategorized")
             {
-                return BadRequest(new { success=false, message = "Cannot add \"Uncategorized\" category!" });
+                var existingUncategorized = await _context.Categories.FirstOrDefaultAsync(c => c.Name == "Uncategorized");
+                if(existingUncategorized != null)
+                {
+                    return BadRequest(new { success = false, message = "Cannot add \"Uncategorized\" category!" });
+                }
             }
             var newCategory = new Category 
             { 
@@ -123,7 +127,7 @@ namespace EcomWebAPI.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return Ok(new {success = true, message="Category deleted successfully and associated products marked as Uncatogorized!"});
+            return Ok(new {success = true, data = category});
         }
 
 

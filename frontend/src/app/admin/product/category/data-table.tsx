@@ -114,7 +114,7 @@ export function DataTable<TData, TValue>({
                     </DropdownMenu>
                 </div>
                 <div className="flex gap-3">
-                    <CreateCategory trigger={<Button>Add Category</Button>} />
+                    <Button onClick={() => setIsCreateCategoryOpen(true)}>Create Category</Button>
                 </div>
                 {/* <Button onClick={() => table.resetColumnFilters()}>Reset</Button> */}
             </div>
@@ -181,7 +181,7 @@ export function DataTable<TData, TValue>({
                     Next
                 </Button>
             </div>
-
+            <CreateCategory isOpen={isCreateCategoryOpen} setIsOpen={setIsCreateCategoryOpen} />
         </div>
     )
 }

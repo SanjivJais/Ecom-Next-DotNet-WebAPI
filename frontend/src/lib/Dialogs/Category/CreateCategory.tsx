@@ -14,17 +14,17 @@ import { Textarea } from "@/components/ui/textarea"
 import { createCategory } from "@/lib/APIs/category"
 import { CustomError } from "@/lib/interfaces"
 import useCategoryStore from "@/stores/categoryStore"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { toast } from "sonner"
 
 interface CreateCategoryProps {
     isOpen: boolean,
-    setIsOpen: (state: boolean) => void
+    setIsOpen: (open: boolean) => void
 }
 
 
 export const CreateCategory = ({ isOpen, setIsOpen }: CreateCategoryProps) => {
-    
+
     const [categoryDetails, setCategoryDetails] = useState({
         name: "",
         description: ""
@@ -33,6 +33,20 @@ export const CreateCategory = ({ isOpen, setIsOpen }: CreateCategoryProps) => {
     const [errors, setErrors] = useState<AlertProps[]>([]);
     const [loading, setLoading] = useState(false)
     const { categories, setCategories } = useCategoryStore();
+
+
+    // Reset form state when `isOpen` becomes true
+    useEffect(() => {
+        if (isOpen) {
+            setCategoryDetails({
+                name: "",
+                description: ""
+            });
+            setErrors([]);
+            setLoading(false);
+        }
+    }, [isOpen]);
+
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setCategoryDetails({
@@ -56,6 +70,7 @@ export const CreateCategory = ({ isOpen, setIsOpen }: CreateCategoryProps) => {
                 toast.success("Category created!")
                 setCategories([...categories, response.data])
             }
+            setIsOpen(false)
         } catch (error) {
             toast.error((error as CustomError).response?.data.message)
         } finally {
@@ -65,7 +80,7 @@ export const CreateCategory = ({ isOpen, setIsOpen }: CreateCategoryProps) => {
 
 
     return (
-        <Dialog>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                     <DialogTitle>Create category</DialogTitle>

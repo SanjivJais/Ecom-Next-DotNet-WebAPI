@@ -30,7 +30,7 @@ export default function DemoPage() {
 
   return (
     <div className="container mx-auto py-10">
-      {loading ? <h1>Loading...</h1> : <DataTable columns={columns} data={categories} />}
+      {loading ? <h1>Loading...</h1> : <DataTable columns={columns} data={categories.toSorted((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())} />}
     </div>
   )
 }

@@ -15,7 +15,7 @@ import { useState } from "react"
 import useAuthStore from "@/stores/authStore"
 import { useRouter } from "next/navigation"
 import { loginUser } from "@/services/authService"
-import { saveToken } from "@/utils/token"
+import { saveToken } from "@/lib/token"
 import { toast } from "sonner"
 
 

@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { ShoppingCart } from "lucide-react"
 import useAuthStore from "@/stores/authStore"
-import { removeToken } from "@/utils/token"
+import { removeToken } from "@/lib/token"
 
 export const AppHeader = () => {
 

@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/sidebar"
 import Link from "next/link"
 import { ModeToggle } from "./theme-toggle"
-import { SidebarMenuInterface } from "@/utils/interfaces"
+import { SidebarMenuInterface } from "@/lib/interfaces"
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
     navMainData: SidebarMenuInterface["items"];

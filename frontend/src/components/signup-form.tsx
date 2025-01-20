@@ -15,7 +15,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { registerUser } from "@/services/authService"
 import { Checkbox } from "./ui/checkbox"
-import { CustomError } from "@/utils/interfaces"
+import { CustomError } from "@/lib/interfaces"
 import { toast } from "sonner"
 
 export function SignupForm({

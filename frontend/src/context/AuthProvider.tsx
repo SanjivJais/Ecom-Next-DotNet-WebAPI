@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import useAuthStore from "@/stores/authStore";
 import { useRouter } from "next/navigation";
 import { fetchUserData } from "@/services/authService";
-import { getToken } from "@/utils/token";
+import { getToken } from "@/lib/token";
 import { BarLoader } from "react-spinners"
 
 export default function AuthProvider({

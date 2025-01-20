@@ -18,7 +18,7 @@ import {
 import { ShoppingCart } from "lucide-react"
 import { useTheme } from "next-themes"
 import useAuthStore from "@/stores/authStore"
-import { removeToken } from "@/utils/token"
+import { removeToken } from "@/lib/token"
 
 export default function Navbar() {
 

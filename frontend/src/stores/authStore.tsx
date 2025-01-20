@@ -1,4 +1,4 @@
-import { User } from "@/utils/interfaces";
+import { User } from "@/lib/interfaces";
 import { create } from "zustand";
 
 interface AuthState {

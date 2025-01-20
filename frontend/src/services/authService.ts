@@ -1,6 +1,6 @@
 import { API_BASE_URL } from "@/config";
-import { AuthResponseUser } from "@/utils/interfaces";
-import { getToken } from "@/utils/token";
+import { AuthResponseUser } from "@/lib/interfaces";
+import { getToken } from "@/lib/token";
 import axios from "axios";
 
 interface AuthResponse {

@@ -18,7 +18,7 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
 import Link from "next/link"
-import { SidebarMenuInterface } from "@/utils/interfaces"
+import { SidebarMenuInterface } from "@/lib/interfaces"
 
 export function NavMain({ items }: SidebarMenuInterface) {
   return (

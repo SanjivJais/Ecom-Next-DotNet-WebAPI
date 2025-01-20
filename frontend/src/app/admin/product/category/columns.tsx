@@ -12,51 +12,61 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-export type Payment = {
-    id: string
-    amount: number
-    status: "pending" | "processing" | "success" | "failed"
-    email: string
-}
+import { Category } from "@/lib/interfaces"
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<Category>[] = [
     {
-        accessorKey: "status",
-        header: "Status",
+        header: "SN",
+        cell: ({ row }) => {
+            return <div>{row.index + 1}</div>
+        }
     },
     {
-        accessorKey: "email",
+        accessorKey: "name",
         header: ({ column }) => {
             return (
                 <Button
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Email
+                    Name
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
         },
     },
     {
-        accessorKey: "amount",
-        header: () => <div className="text-right">Amount</div>,
-        cell: ({ row }) => {
-            const amount = parseFloat(row.getValue("amount"))
-            const formatted = new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: "USD",
-            }).format(amount)
-
-            return <div className="text-right font-medium">{formatted}</div>
-        },
+        accessorKey: "description",
+        header: () => <div className="">Description</div>
     },
+    {
+        accessorKey: "isDeleted",
+        header: "IsDeleted",
+    },
+    {
+        accessorKey: "createdAt",
+        header: "CreatedAt",
+        cell: ({ row }) => {
+            return <div>{new Date(row.getValue("createdAt")).toLocaleString()}</div>
+        }
+    },
+    // {
+    //     accessorKey: "amount",
+    //     header: () => <div className="">Amount</div>,
+    //     cell: ({ row }) => {
+    //         const amount = parseFloat(row.getValue("amount"))
+    //         const formatted = new Intl.NumberFormat("en-US", {
+    //             style: "currency",
+    //             currency: "USD",
+    //         }).format(amount)
+
+    //         return <div className=" font-medium">{formatted}</div>
+    //     },
+    // },
     {
         id: "actions",
         cell: ({ row }) => {
-            const payment = row.original
+            const category = row.original
 
             return (
                 <DropdownMenu>
@@ -69,13 +79,13 @@ export const columns: ColumnDef<Payment>[] = [
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuItem
-                            onClick={() => navigator.clipboard.writeText(payment.id)}
+                            onClick={() => navigator.clipboard.writeText(category.categoryId)}
                         >
-                            Copy payment ID
+                            Copy category ID
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>View customer</DropdownMenuItem>
-                        <DropdownMenuItem>View payment details</DropdownMenuItem>
+                        <DropdownMenuItem>Edit</DropdownMenuItem>
+                        <DropdownMenuItem className="focus:bg-red-500 text-red-500 focus:text-white focus:cursor-pointer">Delete</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             )

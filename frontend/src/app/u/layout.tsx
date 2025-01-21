@@ -3,34 +3,31 @@ import React from 'react'
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppHeader } from "@/components/header";
-function AdminLayout({
+
+function UserLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
 
-
     const navMain = [
         {
-            title: "Dashboard",
-            url: "/vendor",
-            icon: "ChartArea",
-            isActive: true
+            title: "Home",
+            url: "/",
+            icon: "Home",
+            isActive: true,
         },
         {
-            title: "Product",
+            title: "Products",
             url: "#",
             icon: "Box",
-            isActive: false,
-            items: [
-                {
-                    title: "Manage products",
-                    url: "/vendor/product",
-                },
-            ],
         },
-
-    ];
+        {
+            title: "Categories",
+            url: "#",
+            icon: "Grid",
+        },
+    ]
 
 
     return (
@@ -50,4 +47,4 @@ function AdminLayout({
     )
 }
 
-export default AdminLayout
+export default UserLayout

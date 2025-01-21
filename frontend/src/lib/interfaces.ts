@@ -1,5 +1,3 @@
-import { type LucideIcon } from "lucide-react";
-
 export interface User {
     userId: string;
     email: string;
@@ -56,12 +54,12 @@ export interface SidebarMenuInterface {
     items: {
         title: string
         url: string
-        icon ?: LucideIcon
-        isActive ?: boolean
-        items ?: {
+        icon?: string
+        isActive?: boolean
+        items?: {
             title: string
             url: string
         }[]
-    } []
+    }[]
 }
 

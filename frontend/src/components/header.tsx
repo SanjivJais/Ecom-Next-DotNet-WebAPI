@@ -70,6 +70,7 @@ export const AppHeader = () => {
                             <Link href={'/profile'}><DropdownMenuItem>Profile</DropdownMenuItem></Link>
                             <DropdownMenuItem>Billing</DropdownMenuItem>
                             {user?.role.toLowerCase() === 'admin' && <><DropdownMenuSeparator /> <Link href={'/admin'}><DropdownMenuItem>Admin Panel</DropdownMenuItem></Link></>}
+                            {user?.role.toLowerCase() === 'vendor' && <><DropdownMenuSeparator /> <Link href={'/vendor'}><DropdownMenuItem>Seller dashboard</DropdownMenuItem></Link></>}
                             <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={() => logOutUser()} >Logout</DropdownMenuItem>
                         </DropdownMenuContent>

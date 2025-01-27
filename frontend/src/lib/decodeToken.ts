@@ -1,18 +1,19 @@
-import jwt from 'jsonwebtoken';
-const SECRET_KEY = process.env.JWT_SECRET_KEY || 'fallback_jwt_secret'; // Replace with your JWT secret key
-
 function decodeToken(token: string) {
     try {
-        if (!SECRET_KEY) {
-            throw new Error('SECRET_KEY is not set');
-        }
-        // Verify the token and decode its payload
-        const decoded = jwt.verify(token, SECRET_KEY) as jwt.JwtPayload;
-        console.log(decoded)
-        return decoded; // Contains the payload (e.g., { id, role, etc. })
+        const payload = token.split('.')[1]; // Extract the payload part of the JWT
+        const decodedPayload = JSON.parse(atob(payload)); // Decode the Base64 URL-encoded payload
+        // Extract and map relevant claims (if needed)
+        return {
+            role: decodedPayload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'],
+            email: decodedPayload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'],
+            userId: decodedPayload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'],
+            // exp: decodedPayload.exp, // Token expiration time
+            // iss: decodedPayload.iss, // Issuer
+            // aud: decodedPayload.aud, // Audience
+        };
     } catch (error) {
         console.error('Error decoding token:', error);
-        return null; // Invalid or expired token
+        return null;
     }
 }
 

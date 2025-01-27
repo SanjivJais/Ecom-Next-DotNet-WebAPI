@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { fetchUserData } from "@/services/authService";
 import { getToken, removeToken } from "@/lib/token";
 import { BarLoader } from "react-spinners"
-import decodeToken from "@/lib/decodeToken";
 
 export default function AuthProvider({
     children,

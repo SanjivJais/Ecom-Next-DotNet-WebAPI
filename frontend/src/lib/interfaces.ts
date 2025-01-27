@@ -7,6 +7,12 @@ export interface User {
     cart: Cart // Adjust based on your actual `cart` structure.
 }
 
+export interface DecodedUser {
+    role: string
+    userId?: string
+    email?: string
+}
+
 export interface AuthResponseUser extends User {
     token: string;
 }

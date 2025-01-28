@@ -7,7 +7,7 @@ import { fetchAllCategories } from "@/lib/APIs/category";
 import { toast } from "sonner";
 import useCategoryStore from "@/stores/categoryStore";
 
-export default function DemoPage() {
+export default function page() {
 
   const { categories, setCategories } = useCategoryStore();
   const [loading, setLoading] = useState(false);

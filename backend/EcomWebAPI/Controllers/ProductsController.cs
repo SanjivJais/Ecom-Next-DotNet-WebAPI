@@ -23,7 +23,7 @@ namespace EcomWebAPI.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetProducts()
         {
-            var products = await _context.Products.ToListAsync();
+            var products = await _context.Products.Include(p=>p.Category).ToListAsync();
             return Ok(new {success = true, data = products});
         }
 
@@ -32,7 +32,29 @@ namespace EcomWebAPI.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetProduct(Guid id)
         {
-            var product = await _context.Products.FirstOrDefaultAsync(p => p.ProductId == id);
+            // Use Include to load the related Category data
+            var product = await _context.Products
+                .Include(p => p.Category) // Explicitly load the Category
+                .FirstOrDefaultAsync(p => p.ProductId == id);
+
+            // Or use DTO to only fetch required data
+            /*
+             * var product = await _context.Products
+                .Include(p => p.Category)
+                .Where(p => p.ProductId == id)
+                .Select(p => new
+                {
+                    p.ProductId,
+                    p.Name,
+                    p.Description,
+                    p.Price,
+                    p.Stock,
+                    p.ImageUrl,
+                    Category = new { p.Category.Name, p.Category.Description }
+                })
+                .FirstOrDefaultAsync();
+             */
+
             if (product == null)
             {
                 return NotFound(new {success = false, message= "Product not found!"});
@@ -63,7 +85,8 @@ namespace EcomWebAPI.Controllers
             };
             await _context.Products.AddAsync(product);
             await _context.SaveChangesAsync();
-            return Ok(new {success = true, data=product});
+
+            return Ok(new {success = true, data= product });
         }
 
 

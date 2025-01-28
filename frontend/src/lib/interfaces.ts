@@ -19,11 +19,13 @@ export interface AuthResponseUser extends User {
 
 export interface Product {
     productId: string;
+    categoryId: string;
     name: string;
     description: string;
     price: number;
-    imageUrl: string;
     stock: number;
+    imageUrl: string;
+    isDeleted: boolean;
     createdAt: string;
     category: Category;
 }
